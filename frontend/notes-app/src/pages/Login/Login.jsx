@@ -32,13 +32,26 @@ function Login() {
         email: email,
         password: password,
       });
-      // Handle the response as needed
-      if (response.data && response.data.accessToken) {
-        localStorage.setItem("token", response.data.accessToken);
+
+      if (
+        response.data &&
+        response.data.data &&
+        response.data.data.accessToken
+      ) {
+        localStorage.setItem("token", response.data.data.accessToken);
         navigate("/dashboard");
+      } else {
+        setError("Login failed. Please try again.");
       }
     } catch (error) {
       if (
+        error.response &&
+        error.response.data &&
+        error.response.data.data &&
+        error.response.data.data.message
+      ) {
+        setError(error.response.data.data.message);
+      } else if (
         error.response &&
         error.response.data &&
         error.response.data.message
