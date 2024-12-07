@@ -1,9 +1,6 @@
 const { exec } = require("child_process");
 
-// Start the backend
 const startBackend = exec("npm run start", { cwd: "./backend" });
-
-// Start the frontend
 const startFrontend = exec("npm run dev", { cwd: "./frontend/notes-app" });
 
 // Log any output from the backend process
