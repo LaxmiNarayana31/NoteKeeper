@@ -1,16 +1,19 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { Navbar, PasswordInput } from "../../components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { validateEmail } from "../../utils/helper";
+import axiosInstance from "../../utils/axiosInstance";
 
-function SignUp() {
+const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
-  const handleSignUp = (e) => {
+  const navigate = useNavigate();
+
+  const handleSignUp = async (e) => {
     e.preventDefault();
 
     if (!name) {
@@ -30,6 +33,46 @@ function SignUp() {
     setError("");
 
     // Signup API call
+    try {
+      const response = await axiosInstance.post("/create-account", {
+        fullName: name,
+        email: email,
+        password: password,
+      });
+
+      // Handle successful registration response
+      if (response.data && response.data.data && response.data.data.error) {
+        setError(response.data.data.message);
+        return;
+      }
+      if (
+        response.data &&
+        response.data.data &&
+        response.data.data.accessToken
+      ) {
+        localStorage.setItem("token", response.data.data.accessToken);
+        navigate("/dashboard");
+      } else {
+        setError("Signup failed. Please try again.");
+      }
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.data &&
+        error.response.data.data.message
+      ) {
+        setError(error.response.data.data.message);
+      } else if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setError(error.response.data.message);
+      } else {
+        setError("An error occurred. Please try again later.");
+      }
+    }
   };
 
   return (
@@ -79,6 +122,6 @@ function SignUp() {
       </div>
     </>
   );
-}
+};
 
 export default SignUp;
