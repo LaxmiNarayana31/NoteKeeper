@@ -301,6 +301,44 @@ const pinNote = asyncHandler(async (req, resp) => {
   }
 });
 
+// Search notes
+const searchNotes = asyncHandler(async (req, resp) => {
+  const userId = req.user.userId;
+  const { query } = req.query;
+
+  if (!query || query.trim() === "") {
+    return resp
+      .status(400)
+      .json(new ApiResponse(400, null, "Search query is required"));
+  }
+
+  try {
+    const notes = await Note.find({
+      userId,
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { content: { $regex: query, $options: "i" } },
+        { tags: { $regex: query, $options: "i" } },
+      ],
+    });
+
+    if (notes.length === 0) {
+      return resp
+        .status(404)
+        .json(new ApiResponse(404, null, "No notes found matching the query"));
+    }
+
+    return resp
+      .status(200)
+      .json(new ApiResponse(200, notes, "Notes retrieved successfully"));
+  } catch (error) {
+    console.error("Error searching notes:", error);
+    return resp
+      .status(500)
+      .json(new ApiResponse(500, null, "Internal server error"));
+  }
+});
+
 export {
   createAccount,
   loginUser,
@@ -310,4 +348,5 @@ export {
   deleteNote,
   pinNote,
   getAllUsers,
+  searchNotes,
 };
