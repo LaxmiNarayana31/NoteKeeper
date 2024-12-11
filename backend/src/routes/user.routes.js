@@ -8,6 +8,7 @@ import {
   deleteNote,
   pinNote,
   getAllUsers,
+  searchNotes,
 } from "../controllers/user.controller.js";
 import { authenticateToken } from "../middlewares/auth.middleware.js";
 
@@ -21,5 +22,6 @@ router.route("/all-notes").get(authenticateToken, getAllNotes);
 router.route("/delete-note/:noteId").delete(authenticateToken, deleteNote);
 router.route("/pin-note/:noteId").put(authenticateToken, pinNote);
 router.route("/get-user").get(authenticateToken, getAllUsers);
+router.route("/search-notes").get(authenticateToken, searchNotes);
 
 export default router;
