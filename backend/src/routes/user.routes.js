@@ -20,7 +20,7 @@ router.route("/add-note").post(authenticateToken, addNote);
 router.route("/edit-note/:noteId").put(authenticateToken, editNote);
 router.route("/all-notes").get(authenticateToken, getAllNotes);
 router.route("/delete-note/:noteId").delete(authenticateToken, deleteNote);
-router.route("/pin-note/:noteId").put(authenticateToken, pinNote);
+router.route("/update-pin-note/:noteId").put(authenticateToken, pinNote);
 router.route("/get-user").get(authenticateToken, getAllUsers);
 router.route("/search-notes").get(authenticateToken, searchNotes);
 
