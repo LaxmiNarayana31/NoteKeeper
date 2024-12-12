@@ -3,7 +3,7 @@
 import React from "react";
 import { MdOutlinePushPin } from "react-icons/md";
 import { MdCreate, MdDelete } from "react-icons/md";
-// import PropTypes from "prop-types";
+import moment from "moment";
 
 const NoteCard = ({
   title,
@@ -22,7 +22,9 @@ const NoteCard = ({
       <div className="flex justify-between items-center">
         <div>
           <h6 className="text-sm font-medium">{title} </h6>
-          <span className="text-xs text-slate-500">{date}</span>
+          <span className="text-xs text-slate-500">
+            {moment(date).format("Do MMM YYYY")}
+          </span>
         </div>
         <MdOutlinePushPin
           className={`icon-btn ${isPinned ? "text-primary" : "text-slate-300"}`}
@@ -32,7 +34,9 @@ const NoteCard = ({
       <p className="text-xs text-slate-500 mt-2">{content?.slice(0, 60)}</p>
 
       <div className="flex items-center justify-between mt-2">
-        <div className="text-xs text-slate-500">{tags}</div>
+        <div className="text-xs text-slate-500">
+          {tags.map((item) => `#${item}`)}
+        </div>
         <div className="flex itemas-center gap-2">
           <MdCreate
             className="icon-btn hover: text-green-500"
@@ -47,16 +51,5 @@ const NoteCard = ({
     </div>
   );
 };
-
-// NoteCard.propTypes = {
-//   title: PropTypes.string.isRequired,
-//   date: PropTypes.string.isRequired,
-//   content: PropTypes.string.isRequired,
-//   tags: PropTypes.string.isRequired,
-//   isPinned: PropTypes.bool.isRequired,
-//   onEdit: PropTypes.func.isRequired,
-//   onDelete: PropTypes.func.isRequired,
-//   onPinNote: PropTypes.func.isRequired,
-// };
 
 export default NoteCard;
